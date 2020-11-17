@@ -26,8 +26,8 @@ refresh: check stop_event.set() every refresh seconds
             if stop_event and stop_event.is_set():
                 break
             sel = select([s], [], [], refresh)
-            if s in sel[0]:
-                p = s.recv(MTU)
+            if s in sel[0]: # if the packet s is ready to be read from
+                p = s.recv(MTU) # recieve from somewhere ()
                 if p is None:
                     break
                 if lfilter and not lfilter(p):
