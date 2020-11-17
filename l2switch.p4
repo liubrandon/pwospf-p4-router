@@ -184,6 +184,16 @@ control MyVerifyChecksum(inout headers hdr, inout metadata meta) {
 control MyIngress(inout headers hdr,
                   inout metadata meta,
                   inout standard_metadata_t standard_metadata) {
+    counter(3, CounterType.packets) c;
+    action tally_ipv4() {
+        c.count((bit<32>) 0);
+    } 
+    action tally_arp() {
+        c.count((bit<32>) 1);
+    } 
+    action tally_cpu() {
+        c.count((bit<32>) 2);
+    } 
 
     action drop() {
         mark_to_drop();
@@ -212,6 +222,7 @@ control MyIngress(inout headers hdr,
     action send_to_cpu() {
         cpu_meta_encap();
         standard_metadata.egress_spec = CPU_PORT;
+        tally_cpu();
     }
 
     action arp_reply(macAddr_t mac) {
@@ -303,6 +314,9 @@ control MyIngress(inout headers hdr,
     }
 
     apply {
+        // first apply counters
+        if(hdr.ipv4.isValid()) tally_ipv4();
+        if(hdr.arp.isValid())  tally_arp();
         if(standard_metadata.ingress_port == CPU_PORT)
             cpu_meta_decap();
         if(hdr.pwospf.isValid() && standard_metadata.ingress_port == CPU_PORT) {

@@ -2,6 +2,7 @@ from p4app import P4Mininet
 from my_topo import SingleSwitchTopo, TwoSwitchTopo
 from controller import MacLearningController
 from peewee import PWRouter, PWInterface
+import time
 # Add three hosts. Port 1 (h1) is reserved for the CPU.
 N = 3
 
@@ -39,21 +40,21 @@ cpu2 = MacLearningController(sw2,1)
 cpu2.start() # continuously sniffing on the cpu thread
 
 h3, h4, h5, h6 = net.get('h3'), net.get('h4'), net.get('h5'), net.get('h6')
-# # Manual IP forwarding rules until I implement OSPF
-sw1.insertTableEntry(table_name='MyIngress.ipv4_lpm',
-                    match_fields={'hdr.ipv4.dstAddr': ['10.0.1.0', 24]}, # 32 is # bits
-                    action_name='MyIngress.ipv4_route',
-                    action_params={#'nextHopIP': cpu2.router.interfaces[0].ipAddr,
-                                    'port': 7})
-sw2.insertTableEntry(table_name='MyIngress.ipv4_lpm',
-                    match_fields={'hdr.ipv4.dstAddr': ['10.0.0.0', 24]}, # 32 is # bits
-                    action_name='MyIngress.ipv4_route',
-                    action_params={#'nextHopIP': cpu2.router.interfaces[0].ipAddr,
-                                    'port': 8})
+# # # Manual IP forwarding rules until I implement OSPF
+# sw1.insertTableEntry(table_name='MyIngress.ipv4_lpm',
+#                     match_fields={'hdr.ipv4.dstAddr': ['10.0.1.0', 24]}, # 32 is # bits
+#                     action_name='MyIngress.ipv4_route',
+#                     action_params={#'nextHopIP': cpu2.router.interfaces[0].ipAddr,
+#                                     'port': 7})
+# sw2.insertTableEntry(table_name='MyIngress.ipv4_lpm',
+#                     match_fields={'hdr.ipv4.dstAddr': ['10.0.0.0', 24]}, # 32 is # bits
+#                     action_name='MyIngress.ipv4_route',
+#                     action_params={#'nextHopIP': cpu2.router.interfaces[0].ipAddr,
+#                                     'port': 8})
 
 print h5.cmd('arping -c1 10.0.1.6')
 print h3.cmd('arping -c1 10.0.0.4')
-
+time.sleep(20)
 print h3.cmd('ping -c1 10.0.1.5')
 print h3.cmd('ping -c1 10.0.1.6')
 print h4.cmd('ping -c1 10.0.1.5')

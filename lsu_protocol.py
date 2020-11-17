@@ -10,7 +10,7 @@ IP_PROT_PWOSPF = 89
 PWOSPF_TYPE_LSU = 4
 NETMASK = "255.255.255.0" #0xffffff00
 class LSUProtocol(Thread):
-    def __init__(self, sw, router, iface, start_wait=0.3):
+    def __init__(self, sw, router, iface, start_wait=.3):
         super(LSUProtocol, self).__init__() # Initializes Thread object
         self.stop_event = Event() # Thread API thing, do this event when the thread is stopped?
         self.start_wait = start_wait # time to wait for the controller to be listenning
@@ -18,7 +18,7 @@ class LSUProtocol(Thread):
         self.iface = iface
         self.sw = sw
         self.senderThreads = [None, None]
-        # Create a LSUSender thread to send lsu packets our of each interface (port)
+        # Create a LSUSender thread to send lsu packets out of each interface (port)
         # Skip 1 as it is the CPU
         for i in range(2,len(router.interfaces)):
             self.senderThreads.append(LSUSender(router, i, self.router.lsuint, iface))
@@ -52,7 +52,7 @@ class LSUSender(Thread):
     def generateLSAList(self):
         lsaList = []
         for i in range(2, len(self.router.interfaces)):
-            lsaLayer = LSA(subnet=self.router.interfaces[0].ipAddr,mask=self.router.interfaces[i].netMask,routerID=self.router.routerID)
+            lsaLayer = LSA(subnet=self.router.routerID,mask=self.router.interfaces[i].netMask,routerID=self.router.routerID)
             lsaList.append(lsaLayer)
         if not lsaList:
             print("NO LSA PACKETS")

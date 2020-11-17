@@ -37,7 +37,7 @@ class LSA(Packet):
     fields_desc = [
         IPField("subnet", None),
         IPField("mask", None),
-        IntField("routerID", None),
+        IPField("routerID", None),
     ]
     def extract_padding(self, p):
         return "",p

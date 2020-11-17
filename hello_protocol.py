@@ -27,7 +27,10 @@ class HelloProtocol(Thread):
                                     match_fields={'hdr.ipv4.srcAddr': [self.router.interfaces[i].ipAddr]},
                                     action_name='MyIngress.set_egr',
                                     action_params={'port': i})
-            self.senderThreads.append(HelloSender(router, i, self.router.interfaces[i].helloint, iface))
+            if i == 7:
+                self.senderThreads.append(HelloSender(router, i, self.router.interfaces[i].helloint, iface, False))
+            else:
+                self.senderThreads.append(HelloSender(router, i, self.router.interfaces[i].helloint, iface))
         for i in range(2,len(router.interfaces)):
             self.senderThreads[i].start()
 
@@ -43,7 +46,7 @@ class HelloProtocol(Thread):
         super(HelloProtocol, self).join(*args, **kwargs)
     
 class HelloSender(Thread):
-    def __init__(self, router, egressPort, helloint, iface, start_wait=0.3):
+    def __init__(self, router, egressPort, helloint, iface, terminate = False, start_wait=0.3):
         super(HelloSender, self).__init__() # Initializes Thread object
         self.stop_event = Event() # Thread API thing, do this event when the thread is stopped?
         self.start_wait = start_wait # time to wait for the controller to be listenning
@@ -51,6 +54,7 @@ class HelloSender(Thread):
         self.router = router
         self.helloint = helloint
         self.iface = iface
+        self.terminate = terminate
         etherLayer  = Ether()
         cpuLayer    = CPUMetadata(fromCpu=1,origEtherType=0x800)
         ipLayer     = IP(src=self.router.interfaces[self.egressPort].ipAddr,dst=ALLSPFRouters,proto=IP_PROT_PWOSPF)
@@ -58,10 +62,15 @@ class HelloSender(Thread):
         helloLayer  = Hello(netMask=NETMASK,helloint=self.helloint)
         self.helloPacket = etherLayer/cpuLayer/ipLayer/pwospfLayer/helloLayer
         
-    def run(self): # sniff has a while True loop
+    def run(self):
+        count = 0
         while True:
             self.send(self.helloPacket)
+            if count == 10 and self.terminate:
+                print("Hello sender thread killed!")
+                break
             time.sleep(self.helloint)
+            count+=1
 
     def start(self, *args, **kwargs):
         super(HelloSender, self).start(*args, **kwargs)
