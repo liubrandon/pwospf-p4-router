@@ -54,7 +54,7 @@ h3, h4, h5, h6 = net.get('h3'), net.get('h4'), net.get('h5'), net.get('h6')
 
 print h5.cmd('arping -c1 10.0.1.6')
 print h3.cmd('arping -c1 10.0.0.4')
-time.sleep(20)
+time.sleep(30)
 print h3.cmd('ping -c1 10.0.1.5')
 print h3.cmd('ping -c1 10.0.1.6')
 print h4.cmd('ping -c1 10.0.1.5')

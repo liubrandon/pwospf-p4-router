@@ -1,0 +1,112 @@
+brandonliu@Brandons-MacBook-Pro router-final-project % p4app run maclearning.p4app
+> python /p4app/main.py 
+*** Error setting resource limits. Mininet's performance may be affected.
+> p4c-bm2-ss --std p4-16 "/p4app/l2switch.p4" -o "/tmp/p4app-logs/l2switch.json" --p4runtime-files "/tmp/p4app-logs/l2switch.p4info.txt"
+Router 10.0.0.0 added neighbor: (10.0.1.0, 10.0.1.8)
+ARPING 10.0.1.6 from 10.0.1.5 eth0
+Unicast reply from 10.0.1.6 [00:00:00:00:00:06]  139.287ms
+Sent 1 probes (1 broadcast(s))
+Received 1 response(s)
+
+ARPING 10.0.0.4 from 10.0.0.3 eth0
+Unicast reply from 10.0.0.4 [00:00:00:00:00:04]  138.320ms
+Sent 1 probes (1 broadcast(s))
+Received 1 response(s)
+
+Router 10.0.1.0 added neighbor: (10.0.0.0, 10.0.0.7)
+Recieved LSU packet!
+Recieved LSU packet!
+PING 10.0.1.5 (10.0.1.5) 56(84) bytes of data.
+64 bytes from 10.0.1.5: icmp_seq=1 ttl=62 time=60.6 ms
+
+--- 10.0.1.5 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 60.693/60.693/60.693/0.000 ms
+
+PING 10.0.1.6 (10.0.1.6) 56(84) bytes of data.
+64 bytes from 10.0.1.6: icmp_seq=1 ttl=62 time=101 ms
+
+--- 10.0.1.6 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 101.195/101.195/101.195/0.000 ms
+
+PING 10.0.1.5 (10.0.1.5) 56(84) bytes of data.
+64 bytes from 10.0.1.5: icmp_seq=1 ttl=62 time=93.1 ms
+
+--- 10.0.1.5 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 93.183/93.183/93.183/0.000 ms
+
+PING 10.0.1.6 (10.0.1.6) 56(84) bytes of data.
+64 bytes from 10.0.1.6: icmp_seq=1 ttl=62 time=71.7 ms
+
+--- 10.0.1.6 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 71.753/71.753/71.753/0.000 ms
+
+PING 10.0.0.3 (10.0.0.3) 56(84) bytes of data.
+64 bytes from 10.0.0.3: icmp_seq=1 ttl=62 time=4.71 ms
+
+--- 10.0.0.3 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 4.710/4.710/4.710/0.000 ms
+
+PING 10.0.0.4 (10.0.0.4) 56(84) bytes of data.
+64 bytes from 10.0.0.4: icmp_seq=1 ttl=62 time=5.09 ms
+
+--- 10.0.0.4 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 5.096/5.096/5.096/0.000 ms
+
+PING 10.0.0.3 (10.0.0.3) 56(84) bytes of data.
+64 bytes from 10.0.0.3: icmp_seq=1 ttl=62 time=4.26 ms
+
+--- 10.0.0.3 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 4.260/4.260/4.260/0.000 ms
+
+PING 10.0.0.4 (10.0.0.4) 56(84) bytes of data.
+64 bytes from 10.0.0.4: icmp_seq=1 ttl=62 time=4.16 ms
+
+--- 10.0.0.4 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 4.169/4.169/4.169/0.000 ms
+
+
+----- Reading tables rules for s1 -----
+MyIngress.one_hop:  hdr.ipv4.srcAddr '\n\x00\x00\x02' -> MyIngress.set_egr port '\x00\x02'
+MyIngress.one_hop:  hdr.ipv4.srcAddr '\n\x00\x00\x03' -> MyIngress.set_egr port '\x00\x03'
+MyIngress.one_hop:  hdr.ipv4.srcAddr '\n\x00\x00\x04' -> MyIngress.set_egr port '\x00\x04'
+MyIngress.one_hop:  hdr.ipv4.srcAddr '\n\x00\x00\x05' -> MyIngress.set_egr port '\x00\x05'
+MyIngress.one_hop:  hdr.ipv4.srcAddr '\n\x00\x00\x06' -> MyIngress.set_egr port '\x00\x06'
+MyIngress.one_hop:  hdr.ipv4.srcAddr '\n\x00\x00\x07' -> MyIngress.set_egr port '\x00\x07'
+MyIngress.one_hop:  hdr.ipv4.srcAddr '\n\x00\x00\x08' -> MyIngress.set_egr port '\x00\x08'
+MyIngress.one_hop:  hdr.ipv4.srcAddr '\n\x00\x00\t' -> MyIngress.set_egr port '\x00\t'
+MyIngress.one_hop:  hdr.ipv4.srcAddr '\n\x00\x00\n' -> MyIngress.set_egr port '\x00\n'
+MyIngress.ipv4_lpm:  hdr.ipv4.dstAddr ('\n\x00\x00\x03', 32) -> MyIngress.ipv4_forward dstAddr '\x00\x00\x00\x00\x00\x03' port '\x00\x03'
+MyIngress.ipv4_lpm:  hdr.ipv4.dstAddr ('\n\x00\x00\x04', 32) -> MyIngress.ipv4_forward dstAddr '\x00\x00\x00\x00\x00\x04' port '\x00\x04'
+MyIngress.ipv4_lpm:  hdr.ipv4.dstAddr ('\n\x00\x01\x00', 24) -> MyIngress.ipv4_route port '\x00\x07'
+MyIngress.arp_table:  hdr.arp.dstIP '\n\x00\x00\x03' -> MyIngress.arp_reply mac '\x00\x00\x00\x00\x00\x03'
+MyIngress.arp_table:  hdr.arp.dstIP '\n\x00\x00\x04' -> MyIngress.arp_reply mac '\x00\x00\x00\x00\x00\x04'
+MyIngress.fwd_l2:  hdr.ethernet.dstAddr '\xff\xff\xff\xff\xff\xff' -> MyIngress.set_mgid mgid '\x00\x01'
+MyIngress.fwd_l2:  hdr.ethernet.dstAddr '\x00\x00\x00\x00\x00\x03' -> MyIngress.set_egr port '\x00\x03'
+MyIngress.fwd_l2:  hdr.ethernet.dstAddr '\x00\x00\x00\x00\x00\x04' -> MyIngress.set_egr port '\x00\x04'
+
+----- Reading tables rules for s2 -----
+MyIngress.one_hop:  hdr.ipv4.srcAddr '\n\x00\x01\x02' -> MyIngress.set_egr port '\x00\x02'
+MyIngress.one_hop:  hdr.ipv4.srcAddr '\n\x00\x01\x03' -> MyIngress.set_egr port '\x00\x03'
+MyIngress.one_hop:  hdr.ipv4.srcAddr '\n\x00\x01\x04' -> MyIngress.set_egr port '\x00\x04'
+MyIngress.one_hop:  hdr.ipv4.srcAddr '\n\x00\x01\x05' -> MyIngress.set_egr port '\x00\x05'
+MyIngress.one_hop:  hdr.ipv4.srcAddr '\n\x00\x01\x06' -> MyIngress.set_egr port '\x00\x06'
+MyIngress.one_hop:  hdr.ipv4.srcAddr '\n\x00\x01\x07' -> MyIngress.set_egr port '\x00\x07'
+MyIngress.one_hop:  hdr.ipv4.srcAddr '\n\x00\x01\x08' -> MyIngress.set_egr port '\x00\x08'
+MyIngress.one_hop:  hdr.ipv4.srcAddr '\n\x00\x01\t' -> MyIngress.set_egr port '\x00\t'
+MyIngress.one_hop:  hdr.ipv4.srcAddr '\n\x00\x01\n' -> MyIngress.set_egr port '\x00\n'
+MyIngress.ipv4_lpm:  hdr.ipv4.dstAddr ('\n\x00\x01\x05', 32) -> MyIngress.ipv4_forward dstAddr '\x00\x00\x00\x00\x00\x05' port '\x00\x05'
+MyIngress.ipv4_lpm:  hdr.ipv4.dstAddr ('\n\x00\x01\x06', 32) -> MyIngress.ipv4_forward dstAddr '\x00\x00\x00\x00\x00\x06' port '\x00\x06'
+MyIngress.ipv4_lpm:  hdr.ipv4.dstAddr ('\n\x00\x00\x00', 24) -> MyIngress.ipv4_route port '\x00\x08'
+MyIngress.arp_table:  hdr.arp.dstIP '\n\x00\x01\x05' -> MyIngress.arp_reply mac '\x00\x00\x00\x00\x00\x05'
+MyIngress.arp_table:  hdr.arp.dstIP '\n\x00\x01\x06' -> MyIngress.arp_reply mac '\x00\x00\x00\x00\x00\x06'
+MyIngress.fwd_l2:  hdr.ethernet.dstAddr '\xff\xff\xff\xff\xff\xff' -> MyIngress.set_mgid mgid '\x00\x02'
+MyIngress.fwd_l2:  hdr.ethernet.dstAddr '\x00\x00\x00\x00\x00\x05' -> MyIngress.set_egr port '\x00\x05'
+MyIngress.fwd_l2:  hdr.ethernet.dstAddr '\x00\x00\x00\x00\x00\x06' -> MyIngress.set_egr port '\x00\x06'
