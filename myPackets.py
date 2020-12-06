@@ -8,7 +8,7 @@ PWOSPF_TYPE_HELLO = 0x01
 PWOSPF_TYPE_LSU = 0x04
 
 class PWOSPF(Packet):
-    name = "PWOSPF"
+    name = "OSPF"
     fields_desc = [
         ByteField("version", 2),
         ByteField("type", None),
@@ -20,20 +20,18 @@ class PWOSPF(Packet):
         LongField("authentication", 0)
     ]
 
-bind_layers(IP, PWOSPF, proto=IP_PROT_PWOSPF)
 
 class Hello(Packet):
-    name = "Hello"
+    name = "OSPF_hello"
     fields_desc = [
         IPField("netMask", None),
         ShortField("helloint", None),
         ShortField("padding", 0)
     ]
 
-bind_layers(PWOSPF, Hello, type=PWOSPF_TYPE_HELLO)
 
 class LSA(Packet):
-    name = "LSA"
+    # name = "LSA"
     fields_desc = [
         IPField("subnet", None),
         IPField("mask", None),
@@ -43,7 +41,7 @@ class LSA(Packet):
         return "",p
 
 class LSU(Packet):
-    name = "LSU"
+    name = "OSPF_LSU"
     fields_desc = [
         ShortField("sequence", None),
         ShortField("ttl", 64),
@@ -51,4 +49,6 @@ class LSU(Packet):
         PacketListField("lsaList", None, LSA, count_from = lambda pkt: pkt.numAds)
     ]
 
+# bind_layers(IP, PWOSPF, proto=IP_PROT_PWOSPF)
+bind_layers(PWOSPF, Hello, type=PWOSPF_TYPE_HELLO)
 bind_layers(PWOSPF, LSU, type=PWOSPF_TYPE_LSU)

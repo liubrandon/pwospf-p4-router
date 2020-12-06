@@ -1,13 +1,13 @@
 from threading import Thread, Event
 from scapy.all import sendp
-from scapy.all import Packet, Ether, IP, ARP
+from scapy.all import Packet, Ether, IP, ARP, Raw
 from async_sniff import sniff
 from cpu_metadata import CPUMetadata
 import time
 from peewee import PWRouter, PWInterface
 from hello_protocol import HelloProtocol
 from lsu_protocol import LSUProtocol
-from myPackets import Hello, PWOSPF, LSU
+from myPackets import Hello, PWOSPF, LSU, IP_PROT_PWOSPF
 from timeout_watcher import TimeoutWatcher
 
 ARP_OP_REQ   = 0x0001
@@ -125,15 +125,27 @@ class MacLearningController(Thread):
 
         # Ignore packets that the CPU sends:
         if pkt[CPUMetadata].fromCpu == 1: return
-        if Hello in pkt:
-            self.handleHello(pkt)
-        if LSU in pkt:
-            self.handleLSU(pkt)
         if ARP in pkt:
             if pkt[ARP].op == ARP_OP_REQ:
                 self.handleArpRequest(pkt)
             elif pkt[ARP].op == ARP_OP_REPLY:
                 self.handleArpReply(pkt)
+            return
+        if pkt[IP].proto == IP_PROT_PWOSPF:
+            try:
+                pwospf_pkt = PWOSPF(pkt[Raw])
+            except Exception:
+                print('%s cannot parse this PWOSPF packet correctly\n' % self.sw.name)
+                return
+        
+            if Hello in pwospf_pkt:
+                self.handleHello(pwospf_pkt)
+            elif LSU in pwospf_pkt:
+                self.handleLSU(pwospf_pkt)
+            else:
+                print("Invalid OSPF packet structure (no Hello or LSU)")
+                return
+        
 
     def send(self, *args, **override_kwargs):
         pkt = args[0]

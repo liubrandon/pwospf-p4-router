@@ -11,7 +11,7 @@ class PWRouter():
         for i in range(2,MAX_INTERFACES+1): # assume 10 interfaces
             ipAddr = self.routerID[:-1] + str(i)
             netMask = "255.255.255.0"
-            helloint = 3
+            helloint = 4
             self.interfaces.append(PWInterface(ipAddr, netMask, helloint))
     
 class PWInterface():

@@ -36,7 +36,7 @@ class PWOSPFRouter(P4RuntimeSwitch):
         P4RuntimeSwitch.__init__(self, *opts, **kwargs)
     
     def initTable(self):
-        bcast_mgid = 1
+        bcast_mgid = 2
         ctrl_port = 1
         # Broadcast to ports except for 0 (lo) and ctrl_port
         bcast_ports = [p for p in self.intfs.keys() if p not in [0, ctrl_port]]
@@ -48,6 +48,7 @@ class PWOSPFRouter(P4RuntimeSwitch):
 
     def start(self, controllers):
         super(PWOSPFRouter, self).start(controllers)
+        self.initTable()
         self.controller = MacLearningController(self, **self.ctrl_args)
         self.controller.start()
     
