@@ -82,15 +82,15 @@ class MacLearningController(Thread):
             pkt[ARP].op = ARP_OP_REPLY
         self.send(pkt) # otherwise multicast just send to the multicast address
 
-    def handleHello(self, pkt):
+    def handleHello(self, pkt, origPkt):
         # print("Controller received hello packet!")
         # check if sending and recieving interface netMask and helloint fields match
-        receivingIntf = self.router.interfaces[pkt[CPUMetadata].srcPort]
+        receivingIntf = self.router.interfaces[origPkt[CPUMetadata].srcPort]
         if pkt[Hello].netMask != receivingIntf.netMask or pkt[Hello].helloint != receivingIntf.helloint:
             print("Drop packet", pkt[Hello].netMask, receivingIntf.netMask)
             print(pkt[Hello].helloint, receivingIntf.helloint)
             return
-        sendingIntfIP = pkt[IP].src
+        sendingIntfIP = origPkt[IP].src
         sendingRouterID = pkt[PWOSPF].routerID
         if sendingIntfIP not in receivingIntf.neighbors:
             # The receiving interface has a neighbor of interfaceIP and the last time recieved hello and routerId are the values
@@ -122,7 +122,6 @@ class MacLearningController(Thread):
     def handlePkt(self, pkt):
         
         assert CPUMetadata in pkt, "Should only receive packets from switch with special header"
-
         # Ignore packets that the CPU sends:
         if pkt[CPUMetadata].fromCpu == 1: return
         if ARP in pkt:
@@ -135,11 +134,11 @@ class MacLearningController(Thread):
             try:
                 pwospf_pkt = PWOSPF(pkt[Raw])
             except Exception:
-                print('%s cannot parse this PWOSPF packet correctly\n' % self.sw.name)
+                print('Brandon %s cannot parse this PWOSPF packet correctly\n' % self.sw.name)
                 return
         
             if Hello in pwospf_pkt:
-                self.handleHello(pwospf_pkt)
+                self.handleHello(pwospf_pkt, pkt)
             elif LSU in pwospf_pkt:
                 self.handleLSU(pwospf_pkt)
             else:
