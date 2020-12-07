@@ -45,8 +45,8 @@ class LSU(Packet):
     fields_desc = [
         ShortField("sequence", None),
         ShortField("ttl", 64),
-        FieldLenField("numAds", None, fmt="I", count_of="lsaList"),
-        PacketListField("lsaList", None, LSA, count_from = lambda pkt: pkt.numAds)
+        FieldLenField("numAds", 0, count_of="lsaList"),
+        PacketListField("lsaList", [], LSA, count_from = lambda pkt: pkt.numAds)
     ]
 
 # bind_layers(IP, PWOSPF, proto=IP_PROT_PWOSPF)

@@ -288,7 +288,7 @@ control MyIngress(inout headers hdr,
 
     table arp_table {
         key = {
-            hdr.arp.dstIP: exact;
+            hdr.arp.dstIP: lpm;
         }
         actions = {
             send_to_cpu;

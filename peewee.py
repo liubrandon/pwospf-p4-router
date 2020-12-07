@@ -36,7 +36,7 @@ class TopoData():
         # For each non-cpu interface (port)
         q = deque()
         visited = set()
-        visited.add(self.routerID)
+        visited.add(self.routerID)      
         for i in range(2, len(self.interfaces)):
             for routerID, _ in self.interfaces[i].neighbors.values():
                 if routerID not in visited: # don't overcount routers with multiple links connecting to it
@@ -55,7 +55,7 @@ class TopoData():
                     q.append(neighborRouterID)
                     visited.add(neighborRouterID)
                     self.bestPortToRouter[neighborRouterID] = currBestPort
-    
+
     # After computing best ports, install the corresponding rules in the data plane
     def installForwardingRules(self):
         for routerID, port in self.bestPortToRouter.items():
@@ -64,11 +64,17 @@ class TopoData():
                 # we know the best port to get to every router
                 # install the rules in this switch such that you can access 
                 # every subnet by going to that best port
+                # print("Subnet:", subnet)
+                # print("Port:", port)
                 if subnet not in self.installedSubnetRules: # install a rule for a subnet only once
                     self.sw.insertTableEntry(table_name='MyIngress.ipv4_lpm',
                                             match_fields={'hdr.ipv4.dstAddr': [subnet, 24]}, # 32 is # bits
                                             action_name='MyIngress.ipv4_route',
                                             action_params={'port': port})
+                    self.sw.insertTableEntry(table_name='MyIngress.arp_table',
+                                            match_fields={'hdr.arp.dstIP': [subnet, 24]},
+                                            action_name='MyIngress.arp_reply',
+                                            action_params={'mac': 0})
                     self.installedSubnetRules.add(subnet)
 
 
